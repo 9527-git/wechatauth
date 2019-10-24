@@ -14,14 +14,13 @@
 <title>商户模式-微信支付</title>
 </head>
 <body>
-<body ontouchstart>
 <div class="bd">
 	<div class="page__bd">
 		<header class='demos-header'>
 			<h1 class="demos-title">微信支付</h1>
 			<p class='demos-sub-title'>微信H5支付</p>
 		</header>
-<form action="/wxPay/wapPay" method="post">
+
 		<div class="weui-wepay-pay-wrap">
 			<div class="weui-wepay-pay">
 			    <div class="weui-wepay-pay__bd">
@@ -36,12 +35,11 @@
 			    <div class="weui-wepay-pay__ft">
 			        <p class="weui-wepay-pay__info">支付金额给商户</p>
 			        <div class="weui-wepay-pay__btn">
-			            <input type="submit" value="立即支付" class="weui-btn weui-btn_primary">
+						<a href="javascript:wxpay();" class="weui-btn weui-btn_primary">立即支付</a>
 			        </div>
 			    </div>
       </div>
 			</div>
-  </form>
 			<div class="weui-wepay-logos weui-wepay-logos_ft">
 			    <img src="https://act.weixin.qq.com/cdn/img/wepayui/0.1.1/wepay_logo_default_gray.svg" alt="" height="16">
 			</div>
@@ -55,4 +53,60 @@
 <script src="//cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/jquery-weui/1.0.1/js/jquery-weui.min.js"></script>
 <script src="/layer/layer.js"></script>
+<script type="text/javascript">
+	function wxpay() {
+		$.showLoading("正在加载...");
+		var total_fee = $.trim($("#web_money").val());
+		$.post("/pay/createOrder", {
+			total_fee : total_fee,
+		}, function(res) {
+			$.hideLoading();
+			if (res.code == 0) {
+				var data = $.parseJSON(res.data);
+
+				if (typeof WeixinJSBridge == "undefined") {
+					if (document.addEventListener) {
+						document.addEventListener('WeixinJSBridgeReady',
+								onBridgeReady(data), false);
+					} else if (document.attachEvent) {
+						document.attachEvent('WeixinJSBridgeReady',
+								onBridgeReady(data));
+						document.attachEvent('onWeixinJSBridgeReady',
+								onBridgeReady(data));
+					}
+				} else {
+					onBridgeReady(data);
+				}
+			} else {
+				if (res.code == 2) {
+					layer.alert(res.message);
+				} else {
+					layer.msg("error：" + res.message, {
+						shift : 6
+					});
+				}
+			}
+		});
+
+	}
+
+	function onBridgeReady(json) {
+		WeixinJSBridge.invoke('getBrandWCPayRequest', json, function(res) {
+// 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回    ok，但并不保证它绝对可靠。
+			if (res.err_msg == "get_brand_wcpay_request:ok") {
+				layer.msg("支付成功", {
+					shift : 6
+				});
+
+				self.location = "/success";
+
+			} else {
+				layer.msg("支付失败", {
+					shift : 6
+				});
+			}
+		});
+	}
+
+</script>
 </html>

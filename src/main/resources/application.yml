@@ -1,3 +1,30 @@
-wechat:
-  mpAppId: XXXXXXXXXXX
-  mpAppSecret: XXXXXXXXXXXXXXXXXXXX
+logging:
+  level:
+    org.springframework.web: INFO
+    com.github.binarywang.demo.wx.mp: info
+    me.chanjar.weixin: info
+
+#静态页面配置路径
+spring:
+  thymeleaf:
+    prefix: classpath:/views/
+    cache: false
+
+wx:
+  mp:
+    configs:
+      - appId: wxfe45fa8b140e8fa8
+        secret: 10a52bac4349ba7f723a82165ab5b091
+        token: 111 （接口配置里的Token值）
+        aesKey: 111 （接口配置里的EncodingAESKey值）
+  pay:
+    appId: wx32a901a819fc4816 #微信公众号或者小程序等的appid
+    mchId: 1557428751 #微信支付商户号
+    mchKey: ojqr4Rmp8ETJYaWlbR5A3MIBlWqYgQ2H #微信支付商户密钥
+    subAppId: #服务商模式下的子商户公众账号ID
+    subMchId: #服务商模式下的子商户号
+    keyPath: classpath:apiclient_cert.p12  # p12证书的位置，可以指定绝对路径，也可以指定类路径（以classpath:开头）
+
+server:
+  port: 80
+

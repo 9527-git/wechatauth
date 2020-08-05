@@ -13,8 +13,8 @@ spring:
 wx:
   mp:
     configs:
-      - appId: wxfe45fa8b140e8fa8
-        secret: 10a52bac4349ba7f723a82165ab5b091
+      - appId: xxxxxxxxxx
+        secret: xxxxxxxxxxxxxxxxxx
         token: 111 （接口配置里的Token值）
         aesKey: 111 （接口配置里的EncodingAESKey值）
   pay:
